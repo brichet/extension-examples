@@ -112,7 +112,7 @@ jobs:
           cat labextension.list | grep -ie "@jupyterlab-examples/*.*OK"
           python -m jupyterlab.browser_check
           export NAME=`python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])"`
-          pip uninstall -y $(NAME)
+          pip uninstall -y ${NAME}
         shell: bash
 
       - name: Integration tests
