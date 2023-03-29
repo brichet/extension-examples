@@ -9,7 +9,7 @@ on:
 jobs:
   build_extensions:
     runs-on: ${{ matrix.os }}
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -67,8 +67,7 @@ jobs:
           diff ../hello-world/.eslintignore .eslintignore
           diff ../hello-world/.eslintrc.js .eslintrc.js
           diff ../hello-world/.gitignore .gitignore
-          diff ../hello-world/ui-tests/playwright.config.ts ./ui-tests/playwright.config.ts
-          diff ../hello-world/ui-tests/README.md ./ui-tests/README.md
+          diff ../hello-world/ui-tests/playwright.config.js ./ui-tests/playwright.config.js
         shell: bash
       - name: Install node
         if: steps.filter.outputs.extension == 'true'
