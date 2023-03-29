@@ -99,7 +99,7 @@ if (launcher) {
   launcher.add({
     command,
     category: 'Extension Examples',
-    rank: 1,
+    rank: 1
   });
 }
 ```
