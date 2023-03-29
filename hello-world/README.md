@@ -25,7 +25,7 @@ author_name []: tuto
 author_email []: tuto@help.you
 labextension_name [myextension]: hello-world
 python_name [hello_world]:
-project_short_description [A JupyterLab extension.]: Minimal JupyterLab example
+project_short_description [A JupyterLab extension.]: Minimal JupyterLab example.
 has_settings [n]:
 has_server_extension [n]:
 has_binder [n]: y
@@ -39,39 +39,49 @@ that looks like this:
 
 ```bash
 hello_world/
-│   .eslintignore
-│   .eslintrc.js
-│   .gitignore
-│   .prettierignore
-│   .prettierrc
-│   install.json
-│   LICENSE
-│   MANIFEST.in
-│   package.json
-│   pyproject.toml
-│   README.md
-│   setup.py
-│   tsconfig.json
-│
-├───.github
-│   └───workflows
-│           build.yml
-│
-├───binder
-│       environment.yml
-│       postBuild
-│
-├───hello_world
-│       __init__.py
-│       _version.py
-│
-├───src
-│       index.ts
-│
-└───style
-        base.css
-        index.css
-        index.js
+├── babel.config.js
+├── CHANGELOG.md
+├── .eslintignore
+├── .eslintrc.js
+├── .github
+│   └── workflows
+│       ├── build.yml
+│       ├── check-release.yml
+│       └── update-integration-tests.yml
+├── .gitignore
+├── hello_world
+│   └── __init__.py
+├── install.json
+├── jest.config.js
+├── LICENSE
+├── package.json
+├── .prettierignore
+├── .prettierrc
+├── pyproject.toml
+├── README.md
+├── RELEASE.md
+├── setup.py
+├── src
+│   ├── index.ts
+│   └── __tests__
+│       └── hello_world.spec.ts
+├── style
+│   ├── base.css
+│   ├── index.css
+│   └── index.js
+├── .stylelintrc
+├── tsconfig.json
+├── tsconfig.test.json
+├── ui-tests
+│   ├── jupyter_server_test_config.py
+│   ├── package.json
+│   ├── playwright.config.js
+│   ├── README.md
+│   ├── tests
+│   │   └── hello_world.spec.ts
+│   └── yarn.lock
+└── .yarnrc.yml
+
 ```
 
 Those files can be separated in 4 groups:
@@ -91,7 +101,6 @@ Those files can be separated in 4 groups:
 - Packaging as a Python package:
   - `setup.py` contains information about the Python package such as what to package
   - `pyproject.toml` contains the dependencies to create the Python package
-  - `MANIFEST.in` contains list of non-Python files to include in the Python package
   - `install.json` contains information retrieved by JupyterLab to help users know how to manage the package
   - `hello_world/` folder contains the final code to be distributed
 
@@ -120,10 +129,10 @@ called `@jupyterlab/application`. The dependency of your extension on this
 package is declared in the file `package.json`:
 
 ```json5
-// package.json#L49-L51
+// package.json#L57-L59
 
 "dependencies": {
-  "@jupyterlab/application": "^3.1.0"
+  "@jupyterlab/application": "^4.0.0-beta.0"
 },
 ```
 

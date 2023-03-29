@@ -1,4 +1,3 @@
-
 import json
 import os.path as osp
 
@@ -14,6 +13,4 @@ def _jupyter_labextension_paths():
         'src': 'labextension',
         'dest': data['name']
     }]
-
-
 
