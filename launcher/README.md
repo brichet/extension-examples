@@ -24,12 +24,12 @@ The command will create a new Python file and then open it:
 commands.addCommand(command, {
   label: (args) => (args['isPalette'] ? 'New Python File' : 'Python File'),
   caption: 'Create a new Python file',
-  icon: (args) => (args['isPalette'] ? null : icon),
+  icon: (args) => (args['isPalette'] ? undefined : icon),
   execute: async (args) => {
     // Get the directory in which the Python file must be created;
     // otherwise take the current filebrowser directory
     const cwd =
-      args['cwd'] || browserFactory.tracker.currentWidget.model.path;
+      args['cwd'] || browserFactory.tracker.currentWidget?.model.path;
 
     // Create a new untitled python file
     const model = await commands.execute('docmanager:new-untitled', {
