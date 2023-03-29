@@ -111,17 +111,18 @@ jobs:
           jupyter labextension list 2>&1 | tee labextension.list
           cat labextension.list | grep -ie "@jupyterlab-examples/*.*OK"
           python -m jupyterlab.browser_check
-          export NAME=`python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])"`
-          pip uninstall -y ${NAME}
         shell: bash
 
+      - name: Install galata
+        if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux')
+        working-directory: ${{ matrix.example }}/ui-tests
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: jlpm install
       - name: Integration tests
         if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux')
-        run: |
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env down || true
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env pull -q || true
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env build
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env run --rm e2e
+        working-directory: ${{ matrix.example }}/ui-tests
+        run: jlpm playwright test
       - name: Upload UI Test artifacts
         if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux') && always()
         uses: actions/upload-artifact@v3
@@ -129,12 +130,11 @@ jobs:
           name: ui-test-output
           path: |
             ${{ matrix.example }}/ui-tests/test-results
-      - name: Stop containers
-        if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux') && always()
+      - name: Uninstall extension
+        if: steps.filter.outputs.extension == 'true' && ( startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS') )
         run: |
-          # Print jupyterlab logs before removing the containers using the container name set in docker-compose file
-          docker logs jupyterlab
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env down
+          export NAME=`python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])"`
+          pip uninstall -y ${NAME}
 
   build_serverextension:
     runs-on: ${{ matrix.os }}
@@ -246,14 +246,16 @@ jobs:
           cat labextension.list | grep -ie "@jupyterlab-examples/server-extension.*OK"
           python -m jupyterlab.browser_check
 
+      - name: Install galata
+        if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux')
+        working-directory: ${{ matrix.example }}/ui-tests
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: jlpm install
       - name: Integration tests
         if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux')
-        run: |
-          cd server-extension
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env down || true
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env pull -q || true
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env build
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env run --rm e2e
+        working-directory: ${{ matrix.example }}/ui-tests
+        run: jlpm playwright test
       - name: Upload UI Test artifacts
         if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux') && always()
         uses: actions/upload-artifact@v3
@@ -261,13 +263,11 @@ jobs:
           name: ui-test-output
           path: |
             server-extension/ui-tests/test-results
-      - name: Stop containers
-        if: steps.filter.outputs.extension == 'true' && startsWith(runner.os, 'Linux') && always()
+      - name: Uninstall extension
+        if: steps.filter.outputs.extension == 'true' && ( startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS') )
         run: |
-          cd server-extension
-          # Print jupyterlab logs before removing the containers using the container name set in docker-compose file
-          docker logs jupyterlab
-          docker-compose -f ../end-to-end-tests/docker-compose.yml --env-file ./ui-tests/.env down
+          export NAME=`python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])"`
+          pip uninstall -y ${NAME}
 
   build_all:
     runs-on: ${{ matrix.os }}
